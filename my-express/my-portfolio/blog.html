@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+    <link rel="stylesheet" href="/style.css" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+  </head>
+  <body  class="background-container"  >
+    <div id="postMesParent" style="position: fixed; top: 20%; left: 50%; transform: translate(-50%, -50%); z-index: 99; text-align: center;">
+
+    </div>
+
+    <header class="text-gray-600 body-font">
+      <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+
+        <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center " style="position: fixed; z-index:2; flex-direction: column; margin-top: 45%; margin-left: -8%;">
+          <a onclick="selectMenu('Home')" class="mb-5 text-white hover:text-black block" style="font-size: 30px;">Home</a><br>
+          <a onclick="selectMenu('AboutMe')" class="mb-5 text-white hover:text-black block" style="font-size: 30px;">About Me</a><br>
+          <a onclick="selectMenu('PortfolioWork')" class="mb-5 text-white hover:text-black block" style="font-size: 30px;">Portfolio / Work</a><br>
+          <a onclick="selectMenu('ResumeCV')" class="mb-5 text-white hover:text-black block" style="font-size: 30px;">Resume / CV</a><br>
+          <a onclick="selectMenu('Skills')" class="mb-5 text-white hover:text-black block" style="font-size: 30px;">Skills</a><br>
+          <a onclick="selectMenu('BlogArticles')" class="mb-5 text-white hover:text-black block" style="font-size: 30px;">Blog / Articles</a><br>
+          <a onclick="selectMenu('Contact')" class="mb-5 text-white hover:text-black block" style="font-size: 30px;">Contact</a>
+        </nav>
+      </div>
+    </header>
+    <br>
+    <br>
+    <br>
+    <div id="Home"></div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <!-- <div style="background-color:#EFEFF0;"> -->
+    <!-- <div id="app"></div>
+    <script type="module" src="/main.js"></script> -->
+
+
+
+<div id="welcome-contents">
+    <div id="AboutMe"></div>
+
+    <div id="PortfolioWork"></div>
+
+    <div id="ResumeCV"></div>
+
+    <div id="Skills"></div>
+
+    <div id="BlogArticles"></div>
+
+    <div id="Contact"></div>
+</div>
+<div id="blog-show">
+    <div id="Contact"></div>
+</div>
+
+    <script type="module" src="/main.js"></script>
+  <!-- </div> -->
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+
+
+    const currentUrl = window.location.href;
+    // console.log(currentUrl);
+    // if(){
+
+    // }else{
+
+    // }
+
+
+
+
+
+
+    function selectMenu(v){
+      const showElement = document.querySelector("#"+v);
+      showElement.scrollIntoView({
+          behavior: 'smooth', // スムーズにスクロールする場合
+          block: 'center',
+      });
+
+    }
+
+
+    function contactSubmit(){
+      const name = document.querySelector("#name").value;
+      const address = document.querySelector("#email").value;
+      const message = document.querySelector("#message").value;
+
+      // console.log(name,address,message);
+
+      $.ajax({
+              // 渡したいデータをurlのクエリパラメータで指定
+              url: "/contacts/store",
+              type: "post",
+              dataType: "json",
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              data: JSON.stringify({
+                'name':name,
+                'address':address,
+                'message':message
+              })
+            })
+              .done(function (data, testStatus, jqXHR) {
+                  document.querySelector("#postMesParent").innerHTML=`
+                  <p id="postMes" class='py-2 px-8 text-white mx-auto bg-indigo-500' style="font-size: 50px; border-radius: 10px; z-index: 99;">送信しました。</p>
+                  `;
+                  $('#postMes').fadeOut(5000);
+                  document.querySelector("#name").value='';
+                  document.querySelector("#email").value='';
+                  document.querySelector("#message").value='';
+            })
+              .fail(function (jqXHR, textStatus, erorThrown) {
+                document.querySelector("#postMes").innerHTML='通信エラー'
+            });
+         }
+  </script>
+  </body>
+</html>
